@@ -134,9 +134,7 @@ io.on("connection", (socket) => {
       socket.join(room_code);
       io.to(room_code).emit("update_room", { room_player, room });
       console.log(`Player "${room_player}" rejoined room "${room_code}".`);
-    } else {
-      socket.emit("err_socket", { err_socket: "PLAYER_NOT_FOUND" });
-    }
+    } 
   });
 
   /**
