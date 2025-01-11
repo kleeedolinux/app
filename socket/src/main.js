@@ -222,8 +222,6 @@ io.on("connection", (socket) => {
     if (player) {
       player.player_data.cookies = cookies;
       console.log(`Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`);
-    } else {
-      socket.emit("err_socket", { err_socket: "PLAYER_NOT_FOUND" });
     }
   });
 });
