@@ -126,15 +126,7 @@ io.on("connection", (socket) => {
   socket.on("rejoin_room", ({ room_player, room_code }) => {
     const room = ROOMS[room_code];
 
-    if (!room) {
-      socket.emit("err_socket", { err_socket: "ROOM_NOT_FOUND" });
-      return;
-    }
-
-    if (room.state === "finished") {
-      socket.emit("err_socket", { err_socket: "ROOM_STATE_ERROR_FINISHED" });
-      return;
-    }
+    if (!room) return;
 
     const player = room.players.find(player => player.room_player === room_player);
     if (player) {
