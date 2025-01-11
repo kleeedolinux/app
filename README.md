@@ -33,10 +33,6 @@
   <li><b>Multiplayer:</b> Real-time competition with other players.</li>
 </ul>
 
-<b>Download (android):</b> N/A
-<br>
-<b>Download (IOS):</b> N/A
-<br>
 <b>Demo:</b> <a href="https://cookie-clicker-brasil.vercel.app">Cookie Clicker Brasil (web)</a> 
 
 <h3>Features</h3>
