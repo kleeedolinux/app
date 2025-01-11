@@ -1,7 +1,7 @@
 {
   "name": "@cookie-clicker-brasil/socket",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/main.js",
   "type": "module",
   "license": "Apache-2.0",
@@ -17,5 +17,9 @@
     "type": "git",
     "url": "https://github.com/sebastianjnuwu/cookie.git"
   },
-  "keywords": ["cookie-clicker", "socket", "real-time"]
+  "keywords": [
+    "cookie-clicker",
+    "socket",
+    "real-time"
+  ]
 }
