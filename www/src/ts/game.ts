@@ -230,6 +230,8 @@ $("#leave_room").on("click", () => {
     room_player: localStorage.getItem("name"),
   });
 
+  localStorage.setItem("code", null);
+  
   $("ui").hide();
   $("#start-screen").show();
 });
@@ -275,7 +277,7 @@ socket.on("game_end", ({ ranking }: { ranking: any[] }) => {
 
   cookies = 0;
   localStorage.setItem("cookie", cookies.toString());
-  localStorage.setItem("code", "");
+  localStorage.setItem("code", null);
 
   $(".room-code").hide();
   $("#game").hide();
