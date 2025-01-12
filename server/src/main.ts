@@ -1,14 +1,43 @@
+import express from "express";
+import { createServer } from "http";
 import { Server, Socket } from "socket.io";
-import { Room, RoomData, LeaveRoomData, RejoinRoomData, StartGameData, UpdateCookiesData } from "./types/rooms";
+import {
+  Room,
+  RoomData,
+  LeaveRoomData,
+  RejoinRoomData,
+  StartGameData,
+  UpdateCookiesData,
+} from "./types/rooms";
 
-// Initialize server
-const io = new Server();
+/**
+ * Initializes the Express application.
+ */
+const app = express();
+
+/**
+ * Creates an HTTP server using the Express application.
+ */
+const httpServer = createServer(app);
+
+/**
+ * Initializes Socket.IO with the HTTP server.
+ */
+const io = new Server(httpServer);
+
+/**
+ * Stores active rooms on the server.
+ */
 const ROOMS: Record<string, Room> = {};
+
+/**
+ * Counter to generate unique identifiers for players.
+ */
 let roomIdCounter = 0;
 
 /**
  * Generates a unique identifier for each player.
- * @returns The generated identifier.
+ * @returns The generated unique identifier.
  */
 function generateUuid(): number {
   roomIdCounter += 1;
@@ -16,7 +45,7 @@ function generateUuid(): number {
 }
 
 /**
- * Generates a random room code.
+ * Generates a random code to identify a room.
  * @returns The generated room code.
  */
 function generateCode(): string {
@@ -24,10 +53,18 @@ function generateCode(): string {
 }
 
 /**
- * Handles a new client connection.
- * @param socket - The socket object representing the client connection.
+ * Health check route to verify the server's state.
+ * Returns "pong" as the response.
+ */
+app.get("/ping", (req, res) => {
+  res.status(200).send({ message: "pong" });
+});
+
+/**
+ * Handles client connections and sets up event listeners.
  */
 io.on("connection", (socket: Socket) => {
+  console.log(`Client connected: ${socket.id}`);
 
   /**
    * Handles player joining or creating a room.
@@ -81,7 +118,7 @@ io.on("connection", (socket: Socket) => {
     io.to(room_code).emit("update_room", { room_player, room });
     console.log(
       `Player "${room_player}" joined room "${room_code}". Room state:`,
-      room,
+      room
     );
   });
 
@@ -98,7 +135,7 @@ io.on("connection", (socket: Socket) => {
     }
 
     room.players = room.players.filter(
-      (player) => player.room_player !== room_player,
+      (player) => player.room_player !== room_player
     );
 
     if (room.players.length === 0) {
@@ -113,7 +150,7 @@ io.on("connection", (socket: Socket) => {
     io.to(room_code).emit("update_room", { room_player, room });
 
     console.log(
-      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`,
+      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`
     );
   });
 
@@ -127,7 +164,7 @@ io.on("connection", (socket: Socket) => {
     if (!room) return;
 
     const player = room.players.find(
-      (player) => player.room_player === room_player,
+      (player) => player.room_player === room_player
     );
     if (player) {
       player.socket = socket.id;
@@ -184,7 +221,7 @@ io.on("connection", (socket: Socket) => {
 
             console.log(
               `Game in room "${room_code}" finished! Ranking:`,
-              ranking,
+              ranking
             );
             return;
           }
@@ -201,29 +238,40 @@ io.on("connection", (socket: Socket) => {
    * Updates the number of cookies for a player in the room.
    * @param data - The data for updating the cookies.
    */
-  socket.on("update_cookies", ({ room_player, room_code, cookies }: UpdateCookiesData) => {
-    if (typeof cookies !== "number" || cookies < 0) {
-      socket.emit("err_socket", { err_socket: "INVALID_COOKIES" });
-      return;
-    }
+  socket.on(
+    "update_cookies",
+    ({ room_player, room_code, cookies }: UpdateCookiesData) => {
+      if (typeof cookies !== "number" || cookies < 0) {
+        socket.emit("err_socket", { err_socket: "INVALID_COOKIES" });
+        return;
+      }
 
-    const room = ROOMS[room_code];
+      const room = ROOMS[room_code];
 
-    if (!room) return;
+      if (!room) return;
 
-    const player = room.players.find(
-      (player) => player.room_player === room_player,
-    );
-
-    if (player) {
-      player.player_data.cookies = cookies;
-      console.log(
-        `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`,
+      const player = room.players.find(
+        (player) => player.room_player === room_player
       );
+
+      if (player) {
+        player.player_data.cookies = cookies;
+        console.log(
+          `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`
+        );
+      }
     }
+  );
+
+  /**
+   * Handles client disconnection.
+   */
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
   });
-  
 });
 
-// Start server on port 3000
-io.listen(3000);
+// Starts the server on port 3000
+httpServer.listen(3000, () => {
+  console.log("Server is running on http://localhost:3000");
+});

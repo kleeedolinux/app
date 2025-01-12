@@ -27,6 +27,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 8080,
+    host: process.env.VITE_WEB_HOST,
+    port: process.env.VITE_WEB_PORT,
   },
 });
