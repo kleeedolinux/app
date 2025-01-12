@@ -4,7 +4,7 @@ import "dotenv/config";
 
 export default defineConfig({
   root: "./www",
-  target: 'esnext',
+  target: "esnext",
   build: {
     outDir: "../build",
     minify: false,

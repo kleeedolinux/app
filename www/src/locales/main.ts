@@ -4,29 +4,28 @@ import $ from "jquery";
 import pt from "@lang/pt-BR.ts";
 import en from "@lang/en-US.ts";
 import es from "@lang/es-ES.ts";
-  
-  i18next.init({
-    lng: "pt-BR",
-    debug: false,
-    preload: true,
-    resources: {
-      "en-US": {
-        translation: en,
-      },
-      "pt-BR": {
-        translation: pt,
-      },
-      "es-ES": {
-        translation: es,
-      },
-    },
-    interpolation: {
-      escapeValue: false,
-      useRawValueToEscape: true,
-    },
-    load: "all",
-  });
 
+i18next.init({
+  lng: "pt-BR",
+  debug: false,
+  preload: true,
+  resources: {
+    "en-US": {
+      translation: en,
+    },
+    "pt-BR": {
+      translation: pt,
+    },
+    "es-ES": {
+      translation: es,
+    },
+  },
+  interpolation: {
+    escapeValue: false,
+    useRawValueToEscape: true,
+  },
+  load: "all",
+});
 
 let lang: TFunction | undefined;
 

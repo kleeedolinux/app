@@ -38,7 +38,7 @@ function $remove_banner() {
     .catch((err) => {
       return console.error("Error hiding banner: ", err.message);
     });
-};
+}
 
 function $show_video() {
   const adId = "ca-app-pub-6690516270288705/7898187843";
@@ -53,7 +53,7 @@ function $show_video() {
     .catch((err) => {
       console.error("Error displaying rewarded interstitial: ", err.message);
     });
-};
+}
 
 $("#splash-screen").on("click", () => $show_banner());
 

@@ -1,44 +1,41 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
+import { Room, RoomData, LeaveRoomData, RejoinRoomData, StartGameData, UpdateCookiesData } from "./types/rooms";
 
-// Inicialização do servidor
+// Initialize server
 const io = new Server();
-const ROOMS = {};
+const ROOMS: Record<string, Room> = {};
 let roomIdCounter = 0;
 
 /**
- * Gera um identificador único para cada jogador.
- * @returns {number} O identificador gerado.
+ * Generates a unique identifier for each player.
+ * @returns The generated identifier.
  */
-function $generate_uuid() {
+function generateUuid(): number {
   roomIdCounter += 1;
   return roomIdCounter;
 }
 
 /**
- * Gera um código de sala aleatório.
- * @returns {string} O código gerado para a sala.
+ * Generates a random room code.
+ * @returns The generated room code.
  */
-function $generate_code() {
+function generateCode(): string {
   return Math.random().toString(36).substring(2, 8).toUpperCase();
 }
 
 /**
- * Evento de conexão de um novo cliente.
- * @param {Socket} socket - O objeto socket que representa a conexão do cliente.
+ * Handles a new client connection.
+ * @param socket - The socket object representing the client connection.
  */
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
 
   /**
-   * Manipula a criação ou entrada de um jogador em uma sala.
-   * @param {Object} data - Dados para criação ou entrada na sala.
-   * @param {string} [data.room_code] - O código da sala. Se não fornecido, uma nova sala será criada.
-   * @param {number} data.room_time - A duração da sala em minutos.
-   * @param {string} data.room_player - O nome do jogador entrando na sala.
-   * @throws {Error} Se a sala não existir ou se o jogador já estiver na sala.
+   * Handles player joining or creating a room.
+   * @param data - The data for creating or joining a room.
    */
-  socket.on("room", ({ room_code, room_time, room_player }) => {
+  socket.on("room", ({ room_code, room_time, room_player }: RoomData) => {
     if (!room_code) {
-      room_code = $generate_code();
+      room_code = generateCode();
       ROOMS[room_code] = {
         code: room_code,
         date: new Date(),
@@ -60,7 +57,7 @@ io.on("connection", (socket) => {
       socket.emit("err_socket", { err_socket: "ROOM_STATE_ERROR_IN_GAME" });
       return;
     }
-    
+
     if (room.state === "finished") {
       socket.emit("err_socket", { err_socket: "ROOM_STATE_ERROR_FINISHED" });
       return;
@@ -74,7 +71,7 @@ io.on("connection", (socket) => {
     socket.join(room_code);
 
     room.players.push({
-      id: $generate_uuid(),
+      id: generateUuid(),
       date: new Date(),
       socket: socket.id,
       player_data: { cookies: null },
@@ -82,17 +79,17 @@ io.on("connection", (socket) => {
     });
 
     io.to(room_code).emit("update_room", { room_player, room });
-    console.log(`Player "${room_player}" joined room "${room_code}". Room state:`, room);
+    console.log(
+      `Player "${room_player}" joined room "${room_code}". Room state:`,
+      room,
+    );
   });
 
   /**
-   * Manipula a saída de um jogador de uma sala.
-   * @param {Object} data - Dados para sair da sala.
-   * @param {string} data.room_code - O código da sala.
-   * @param {string} data.room_player - O nome do jogador que está saindo.
-   * @throws {Error} Se a sala ou o jogador não forem encontrados.
+   * Handles player leaving a room.
+   * @param data - The data for leaving the room.
    */
-  socket.on("leave_room", ({ room_code, room_player }) => {
+  socket.on("leave_room", ({ room_code, room_player }: LeaveRoomData) => {
     const room = ROOMS[room_code];
 
     if (!room) {
@@ -100,7 +97,9 @@ io.on("connection", (socket) => {
       return;
     }
 
-    room.players = room.players.filter(player => player.room_player !== room_player);
+    room.players = room.players.filter(
+      (player) => player.room_player !== room_player,
+    );
 
     if (room.players.length === 0) {
       delete ROOMS[room_code];
@@ -113,37 +112,36 @@ io.on("connection", (socket) => {
     socket.leave(room_code);
     io.to(room_code).emit("update_room", { room_player, room });
 
-    console.log(`Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`);
+    console.log(
+      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`,
+    );
   });
 
   /**
-   * Manipula o retorno de um jogador para uma sala.
-   * @param {Object} data - Dados para retornar à sala.
-   * @param {string} data.room_player - O nome do jogador retornando.
-   * @param {string} data.room_code - O código da sala.
-   * @throws {Error} Se a sala não for encontrada ou o jogador não estiver na sala.
+   * Handles player rejoining a room.
+   * @param data - The data for rejoining the room.
    */
-  socket.on("rejoin_room", ({ room_player, room_code }) => {
+  socket.on("rejoin_room", ({ room_player, room_code }: RejoinRoomData) => {
     const room = ROOMS[room_code];
 
     if (!room) return;
 
-    const player = room.players.find(player => player.room_player === room_player);
+    const player = room.players.find(
+      (player) => player.room_player === room_player,
+    );
     if (player) {
       player.socket = socket.id;
       socket.join(room_code);
       io.to(room_code).emit("update_room", { room_player, room });
       console.log(`Player "${room_player}" rejoined room "${room_code}".`);
-    } 
+    }
   });
 
   /**
-   * Inicia o jogo em uma sala.
-   * @param {Object} data - Dados para iniciar o jogo.
-   * @param {string} data.room_code - O código da sala.
-   * @throws {Error} Se a sala não existir.
+   * Starts the game in a room.
+   * @param data - The data to start the game.
    */
-  socket.on("start_game", ({ room_code }) => {
+  socket.on("start_game", ({ room_code }: StartGameData) => {
     const room = ROOMS[room_code];
 
     if (!room) {
@@ -184,27 +182,26 @@ io.on("connection", (socket) => {
               console.log(`Room ${room_code} has been deleted.`);
             }
 
-            console.log(`Game in room "${room_code}" finished! Ranking:`, ranking);
+            console.log(
+              `Game in room "${room_code}" finished! Ranking:`,
+              ranking,
+            );
             return;
           }
 
           time_game--;
-        }, 1000); 
+        }, 1000);
       }
 
       countdown--;
-    }, 1000); 
+    }, 1000);
   });
 
   /**
-   * Atualiza o número de cookies de um jogador na sala.
-   * @param {Object} data - Dados para atualizar os cookies.
-   * @param {string} data.room_player - O nome do jogador.
-   * @param {string} data.room_code - O código da sala.
-   * @param {number} data.cookies - O número de cookies a ser atualizado.
-   * @throws {Error} Se a sala ou o jogador não forem encontrados ou se o valor de cookies for inválido.
+   * Updates the number of cookies for a player in the room.
+   * @param data - The data for updating the cookies.
    */
-  socket.on("update_cookies", ({ room_player, room_code, cookies }) => {
+  socket.on("update_cookies", ({ room_player, room_code, cookies }: UpdateCookiesData) => {
     if (typeof cookies !== "number" || cookies < 0) {
       socket.emit("err_socket", { err_socket: "INVALID_COOKIES" });
       return;
@@ -217,14 +214,18 @@ io.on("connection", (socket) => {
       return;
     }
 
-    const player = room.players.find(player => player.room_player === room_player);
+    const player = room.players.find(
+      (player) => player.room_player === room_player,
+    );
 
     if (player) {
       player.player_data.cookies = cookies;
-      console.log(`Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`);
+      console.log(
+        `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`,
+      );
     }
   });
 });
 
-// Inicia o servidor na porta 3000
+// Start server on port 3000
 io.listen(3000);

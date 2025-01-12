@@ -50,7 +50,7 @@ const translation = {
     PLAYER_EXISTS: "Já existe um jogador com esse nome na sala.",
     INVALID_COOKIES: "Dados de cookies inválidos recebidos.",
     ROOM_CODE_NOT_FOUND: "O código da sala não foi encontrado.",
-  }
+  },
 };
 
 export default translation;
