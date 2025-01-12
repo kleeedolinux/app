@@ -209,10 +209,7 @@ io.on("connection", (socket: Socket) => {
 
     const room = ROOMS[room_code];
 
-    if (!room) {
-      socket.emit("err_socket", { err_socket: "ROOM_NOT_FOUND" });
-      return;
-    }
+    if (!room) return;
 
     const player = room.players.find(
       (player) => player.room_player === room_player,
@@ -225,6 +222,7 @@ io.on("connection", (socket: Socket) => {
       );
     }
   });
+  
 });
 
 // Start server on port 3000
