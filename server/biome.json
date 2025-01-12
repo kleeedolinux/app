@@ -19,9 +19,6 @@
     "enabled": true
   },
   "files": {
-    "ignore": [
-      "node_modules",
-      "build"
-    ]
+    "ignore": ["node_modules", "build"]
   }
 }

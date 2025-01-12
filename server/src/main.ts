@@ -1,7 +1,7 @@
 import express from "express";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
-import {
+import { createServer } from "node:http";
+import { Server, type Socket } from "socket.io";
+import type {
   Room,
   RoomData,
   LeaveRoomData,
@@ -118,7 +118,7 @@ io.on("connection", (socket: Socket) => {
     io.to(room_code).emit("update_room", { room_player, room });
     console.log(
       `Player "${room_player}" joined room "${room_code}". Room state:`,
-      room
+      room,
     );
   });
 
@@ -135,7 +135,7 @@ io.on("connection", (socket: Socket) => {
     }
 
     room.players = room.players.filter(
-      (player) => player.room_player !== room_player
+      (player) => player.room_player !== room_player,
     );
 
     if (room.players.length === 0) {
@@ -150,7 +150,7 @@ io.on("connection", (socket: Socket) => {
     io.to(room_code).emit("update_room", { room_player, room });
 
     console.log(
-      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`
+      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`,
     );
   });
 
@@ -164,7 +164,7 @@ io.on("connection", (socket: Socket) => {
     if (!room) return;
 
     const player = room.players.find(
-      (player) => player.room_player === room_player
+      (player) => player.room_player === room_player,
     );
     if (player) {
       player.socket = socket.id;
@@ -221,7 +221,7 @@ io.on("connection", (socket: Socket) => {
 
             console.log(
               `Game in room "${room_code}" finished! Ranking:`,
-              ranking
+              ranking,
             );
             return;
           }
@@ -251,16 +251,16 @@ io.on("connection", (socket: Socket) => {
       if (!room) return;
 
       const player = room.players.find(
-        (player) => player.room_player === room_player
+        (player) => player.room_player === room_player,
       );
 
       if (player) {
         player.player_data.cookies = cookies;
         console.log(
-          `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`
+          `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`,
         );
       }
-    }
+    },
   );
 
   /**
