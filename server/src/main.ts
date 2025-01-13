@@ -57,7 +57,10 @@ function generateCode(): string {
  * Returns "pong" as the response.
  */
 app.get("/ping", (req, res) => {
-  res.status(200).send({ message: "pong" });
+  res.status(200).send({ 
+    message: "pong",
+    date: new Date()
+  });
 });
 
 /**
