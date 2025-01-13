@@ -22,7 +22,6 @@
     "prepare-commit-msg": "npx --no -- commitlint --edit $1; exec < /dev/tty && npx cz --hook || true"
   },
   "dependencies": {
-    "firebase": "^11.1.0",
     "@capacitor-community/admob": "^6.1.0",
     "@capacitor/android": "^6.2.0",
     "@capacitor/core": "^6.2.0",
