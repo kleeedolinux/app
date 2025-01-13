@@ -5,7 +5,6 @@ import "dotenv/config";
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
   root: "./www",
-  target: "esnext",
   publicDir: "./public",
   build: {
     outDir: "../build",
@@ -25,6 +24,7 @@ export default defineConfig({
       "@language": "/src/locales",
       "@plugin": "/src/plugins",
       "@ts": "/src/ts",
+      "@js": "/src/js",
       "@scss": "/src/styles/scss",
     },
   },

@@ -5,6 +5,13 @@ import {
 } from "@capacitor-community/admob";
 import $ from "jquery";
 
+
+if (window.Capacitor.getPlatform() !== "android") {
+  
+  console.log(`AdMob: Unsupported platform (${window.Capacitor.getPlatform()})`);
+  
+} else {
+  
 AdMob.initialize()
   .then(() => {
     console.log("AdMob initialized.");
@@ -60,3 +67,5 @@ $("#splash-screen").on("click", () => $show_banner());
 $("#start_game").on("click", () => $remove_banner());
 
 $("#game_exit").on("click", () => $show_video());
+
+};
