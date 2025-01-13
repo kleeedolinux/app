@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
   
 const app = firebase.initializeApp({
   apiKey: "AIzaSyBLkMv2N_cnG6q-9spUj01wvxRnfWSr6XY",
@@ -14,4 +14,9 @@ const app = firebase.initializeApp({
 
 const analytics = getAnalytics(app);
 
-console.log(analytics);
+logEvent(analytics, 'device_info', {
+  device: navigator.userAgent,
+  platform: navigator.platform,
+  screen_resolution: `${window.screen.width}x${window.screen.height}`,
+  language: navigator.language
+});
