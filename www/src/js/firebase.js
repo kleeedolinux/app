@@ -1,3 +1,7 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics.js";
+  
 const app = firebase.initializeApp({
   apiKey: "AIzaSyBLkMv2N_cnG6q-9spUj01wvxRnfWSr6XY",
   authDomain: "cookie-brasil.firebaseapp.com",
@@ -10,6 +14,4 @@ const app = firebase.initializeApp({
 
 const analytics = getAnalytics(app);
 
-setUserProperties(analytics, {
-  favorite_food: 'cookie'
-});
+console.log(analytics);
