@@ -2,7 +2,7 @@
 const translation = {
   general: {
     cookies: "Cookies",
-    seconds: "Clicks per second",
+    seconds: "Clicks",
     timeLabel: "Time:",
     start: "GO!",
     message_now: "Now",
