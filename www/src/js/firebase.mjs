@@ -23,6 +23,5 @@ logEvent(analytics, 'user_info', {
   connectionType: navigator.connection ? navigator.connection.effectiveType : "unknown", 
   timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,  
   deviceMemory: navigator.deviceMemory || "unknown", 
-  hardwareConcurrency: navigator.hardwareConcurrency || "unknown",  
-  batteryLevel: navigator.getBattery ? (await navigator.getBattery()).level : "unknown"
+  hardwareConcurrency: navigator.hardwareConcurrency || "unknown"
 });
