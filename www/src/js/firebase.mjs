@@ -12,16 +12,6 @@ const app = initializeApp({
 });
 const analytics = getAnalytics(app);
 
-logEvent(analytics, 'user_info', {
-  userAgent: navigator.userAgent, 
-  language: navigator.language, 
-  platform: navigator.platform,  
-  screenWidth: window.screen.width, 
-  screenHeight: window.screen.height, 
-  colorDepth: window.screen.colorDepth, 
-  onlineStatus: navigator.onLine, 
-  connectionType: navigator.connection ? navigator.connection.effectiveType : "unknown", 
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,  
-  deviceMemory: navigator.deviceMemory || "unknown", 
-  hardwareConcurrency: navigator.hardwareConcurrency || "unknown"
+logEvent(analytics, 'app_version', {
+  version: 'v1.0.1' 
 });
