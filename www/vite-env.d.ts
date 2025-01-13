@@ -10,6 +10,8 @@ declare global {
 
 interface ImportMetaEnv {
   readonly VITE_SOCKET_URL: string;
+  readonly VITE_WEB_HOST: string;
+  readonly VITE_WEB_PORT: number;
 }
 
 interface ImportMeta {
