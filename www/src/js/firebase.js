@@ -8,5 +8,5 @@ const app = firebase.initializeApp({
   measurementId: "G-6KZE06S4SF"
 });
 
-const analytics = getAnalytics(app);
+const analytics = firebase.getAnalytics(app);
 console.log(analytics);
