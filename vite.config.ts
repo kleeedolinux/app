@@ -2,9 +2,11 @@ import { defineConfig } from "vite";
 import babel from "vite-plugin-babel";
 import "dotenv/config";
 
+/** @type {import('vite').UserConfig} */
 export default defineConfig({
   root: "./www",
   target: "esnext",
+  publicDir: "./public",
   build: {
     outDir: "../build",
     minify: false,
