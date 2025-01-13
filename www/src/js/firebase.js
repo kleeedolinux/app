@@ -9,4 +9,7 @@ const app = firebase.initializeApp({
 });
 
 const analytics = getAnalytics(app);
-console.log(analytics);
+
+setUserProperties(analytics, {
+  favorite_food: 'cookie'
+});
