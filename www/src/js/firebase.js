@@ -1,5 +1,5 @@
   // Inicializar o Firebase
-  const app = initializeApp({
+  const app = firebase.initializeApp({
     apiKey: "AIzaSyBLkMv2N_cnG6q-9spUj01wvxRnfWSr6XY",
     authDomain: "cookie-brasil.firebaseapp.com",
     projectId: "cookie-brasil",
@@ -10,5 +10,7 @@
   });
 
   // Ativar Analytics se necessário
-  const analytics = getAnalytics(app);
+  const analytics = firebase.getAnalytics(app);
+  
+  console.log(app)
   console.log(analytics)
