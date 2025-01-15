@@ -7,6 +7,7 @@ export interface Room {
   players: Player[];
   owner: string;
   time: number;
+  public: boolean;
   state: "waiting" | "in_game" | "finished";
 }
 
