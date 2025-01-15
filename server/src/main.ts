@@ -203,7 +203,6 @@ io.on("connection", (socket: Socket) => {
   
 });
 
-
   /**
    * Handles player rejoining a room.
    * @param data - The data for rejoining the room.
