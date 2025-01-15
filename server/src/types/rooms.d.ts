@@ -24,6 +24,7 @@ export interface Player {
 
 /** Data received to create or join a room */
 export interface RoomData {
+  room_public?: boolean;
   room_code?: string;
   room_time: number;
   room_player: string;
