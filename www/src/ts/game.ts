@@ -31,10 +31,10 @@ function showMessage(text: string): void {
     <div class="toast-body">${text}</div></div>`);
 }
 
-/*  import.meta.env.VITE_SOCKET_URL || "https://socket-hj1h.onrender.com",*/
+/*  */
 
 // Create socket connection
-const socket: Socket = io("http://0.0.0.0:3000", {
+const socket: Socket = io(import.meta.env.VITE_SOCKET_URL || "https://socket-hj1h.onrender.com", {
     transports: ["websocket", "polling"],
   },
 );
