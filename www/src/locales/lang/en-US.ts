@@ -26,6 +26,7 @@ const translation = {
     nicknameLabel: "Nickname",
     gameOptionLabel: "Choose an option:",
     randomRoom: "Join a random room",
+    publicRoomLabel: "Public room:",
     createRoom: "Create a room",
     joinRoom: "Join a room",
     roomCodeLabel: "Room Code",

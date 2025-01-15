@@ -23,13 +23,14 @@ const translation = {
     leaveButton: "Sair",
   },
   game: {
-    nicknameLabel: "Apelido",
+    nicknameLabel: "Nome do Jogador",
     gameOptionLabel: "Escolha uma opção:",
     randomRoom: "Entre em uma sala aleatória",
+    publicRoomLabel: "Sala pública:",
     createRoom: "Criar uma sala",
     joinRoom: "Entrar em uma sala",
     roomCodeLabel: "Código da Sala",
-    gameTimeLabel: "Tempo de Jogo (em segundos)",
+    gameTimeLabel: "Tempo de Jogo",
   },
   room: {
     no_room_player: "Parece que você não definiu seu nickname!",

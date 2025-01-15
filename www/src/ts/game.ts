@@ -23,7 +23,7 @@ function showMessage(text: string): void {
   $message.html(`
     <div class="toast fade show">
      <div class="toast-header">
-     <img style="width: 10%;" src="https://i.imgur.com/EOzKknx.webp" class="rounded me-2">
+     <img style="width: 10%;" src="favicon.ico" class="rounded me-2">
      <strong class="me-auto">Cookie</strong>
      <small><i18next i18next-id="general.message_now">${lang("general.message_now")}</i18next></small>
      <button type="button" style="box-shadow: none; outline: none;" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -31,10 +31,10 @@ function showMessage(text: string): void {
     <div class="toast-body">${text}</div></div>`);
 }
 
+/*  import.meta.env.VITE_SOCKET_URL || "https://socket-hj1h.onrender.com",*/
+
 // Create socket connection
-const socket: Socket = io(
-  import.meta.env.VITE_SOCKET_URL || "https://socket-hj1h.onrender.com",
-  {
+const socket: Socket = io("http://0.0.0.0:3000", {
     transports: ["websocket", "polling"],
   },
 );
@@ -128,6 +128,7 @@ $("#form_button").on("click", () => {
   const option = $('input[name="option_game"]:checked').val() as string;
   const roomPlayer = $("#room_name").val() as string;
   const roomCode = $("#room_code").val() as string;
+  const roomPublic = $("#room_public").prop("checked") as boolean;
   const roomTime = $("#room_time").val() as string | null;
 
   if (!roomPlayer) {
@@ -171,6 +172,7 @@ $("#form_button").on("click", () => {
   localStorage.setItem("name", roomPlayer);
 
   socket.emit("room", {
+    room_public: roomPublic,
     room_code: roomCode,
     room_time: roomTime,
     room_player: roomPlayer,

@@ -73,7 +73,7 @@ io.on("connection", (socket: Socket) => {
    * Handles player joining or creating a room.
    * @param data - The data for creating or joining a room.
    */
-  socket.on("room", ({ room_code, room_time, room_player }: RoomData) => {
+  socket.on("room", ({ room_public, room_code, room_time, room_player }: RoomData) => {
     if (!room_code) {
       room_code = generateCode();
       ROOMS[room_code] = {
@@ -81,6 +81,7 @@ io.on("connection", (socket: Socket) => {
         date: new Date(),
         players: [],
         owner: room_player,
+        public: room_public,
         time: room_time || 11,
         state: "waiting",
       };

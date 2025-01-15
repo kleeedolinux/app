@@ -3,7 +3,6 @@ import $ from "jquery";
 
 import pt from "@lang/pt-BR.ts";
 import en from "@lang/en-US.ts";
-import es from "@lang/es-ES.ts";
 
 i18next.init({
   lng: "pt-BR",
@@ -15,9 +14,6 @@ i18next.init({
     },
     "pt-BR": {
       translation: pt,
-    },
-    "es-ES": {
-      translation: es,
     },
   },
   interpolation: {
@@ -34,9 +30,6 @@ switch (window.navigator.language) {
     lang = i18next.getFixedT("pt-BR");
     break;
   case "en-US":
-    lang = i18next.getFixedT("en-US");
-    break;
-  case "es-ES":
     lang = i18next.getFixedT("en-US");
     break;
   default:

@@ -26,8 +26,10 @@ $(() => {
     const $code_container = $("#code_container");
     const $game_container = $("#game_container");
     const $room_join_input = $("#room_join") as JQuery<HTMLInputElement>;
-
-    $room_code_input.val("");
+    const $room_public_input = $("#room_public") as JQuery<HTMLInputElement>;
+   
+  $room_public_input.prop("checked", false);
+  $room_code_input.val("");
 
     // Toggle visibility of the room code and game containers based on the selection
     if ($room_join_input.is(":checked")) {

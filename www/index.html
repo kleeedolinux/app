@@ -19,26 +19,26 @@
   <meta property="og:site_name" content="Cookie Clicker Brasil">
   <meta property="og:title" content="Cookie Clicker Brasil">
   <meta property="og:description" content="Cookie Clicker Brasil - Não confie em ímpar ou par, ou cara ou coroa!">
-  <meta property="og:image" content="https://i.imgur.com/EOzKknx.webp"> 
+  <meta property="og:image" content="favicon.ico"> 
   <meta property="og:url" content="https://cookie-clicker-brasil.vercel.app">
   <meta property="og:locale" content="pt_BR">
   <meta property="og:type" content="website">
   <meta property="og:title" lang="en" content="Cookie Clicker Brazil - Addictive Game of Clicking to Earn Cookies">
   <meta property="og:description" lang="en" content="Cookie Clicker Brazil - Don’t rely on ODD or EVEN, or HEADS or TAILS!">
-  <meta property="og:image" lang="en" content="https://i.imgur.com/EOzKknx.webp">
+  <meta property="og:image" lang="en" content="favicon.ico">
   <meta property="og:url" lang="en" content="https://cookie-clicker-brasil.vercel.app/en">
   <meta property="og:locale" lang="en" content="en_US">
   <meta property="og:type" lang="en" content="website">
   <meta property="og:title" lang="es" content="Cookie Clicker Brasil - Juego Adictivo de Hacer Clic para Ganar Galletas">
   <meta property="og:description" lang="es" content="Cookie Clicker Brasil - ¡No confíes en IMPAR o PAR, ni en CARA o CRUZ!">
-  <meta property="og:image" lang="es" content="https://i.imgur.com/EOzKknx.webp">
+  <meta property="og:image" lang="es" content="favicon.ico">
   <meta property="og:url" lang="es" content="https://cookie-clicker-brasil.vercel.app">
   <meta property="og:locale" lang="es" content="es_ES">
   <meta property="og:type" lang="es" content="website">
   <meta name="google-adsense-account" content="ca-pub-6690516270288705">
   <link rel="canonical" href="https://cookie-clicker-brasil.vercel.app">
-  <link rel="apple-touch-icon" href="https://i.imgur.com/EOzKknx.webp" />
-  <link rel="shortcut icon" href="https://i.imgur.com/EOzKknx.webp" type="image/webp">
+  <link rel="apple-touch-icon" href="favicon.ico" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/webp">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/eruda/3.4.1/eruda.min.js" integrity="sha512-3RVqOZtMevFOLeXCp0/Wl7np/l3J3MMysaFDUhNh+hdKx+Wb0lMXuHwA6CZ/+4DfYZM01Om1as8g+mnTaQH9vA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script type="text/javascript" charset="utf-8">
  if (new URLSearchParams(window.location.search).get('debug') === 'true') {
@@ -55,7 +55,7 @@
   </div>
 
   <div id="splash-screen">
-    <img src="https://i.imgur.com/EOzKknx.webp" alt="splash-screen" class="icon mb-5">
+    <img src="favicon.ico" alt="splash-screen" class="icon mb-5">
     <h1><i18next i18next-id="splashScreen.splashClick">Click...</i18next></h1>
   </div> 
   
@@ -181,7 +181,7 @@
           <i18next i18next-id="game.gameOptionLabel">Choose an option:</i18next>
         </label>
         <div>
-<div class="form-check">
+         <div class="form-check">
   <input class="form-check-input" type="radio" name="option_game" id="randomRoom" value="random" disabled>
   <label class="form-check-label" for="randomRoom">
   <i class="fas fa-random"></i> 
@@ -196,6 +196,9 @@
             <i18next i18next-id="game.createRoom">Create a room</i18next>
           </label>
           </div>
+          
+
+          
           <div class="form-check">
           <input class="form-check-input" type="radio" name="option_game" id="room_join" value="join">
           <label class="form-check-label" for="room_join">
@@ -214,21 +217,37 @@
         <input type="text" class="form-control" id="room_code" name="room_code" placeholder="XN4ZXP">
         </div>
 
-        <div class="mb-3" id="game_container">
-        <label for="gameTime" class="form-label">
-          <i class="fas fa-clock"></i> 
-          <i18next i18next-id="game.gameTimeLabel">Game Time (in seconds)</i18next>
-        </label>
-        <input type="number" class="form-control" id="room_time" name="gameTime" placeholder="e.g. 11">
-        </div>
+
+<div id="game_container">
+ 
+ <div class="mb-3">
+  <label for="gameTime" class="form-label">
+    <i class="fas fa-clock"></i>
+    <i18next i18next-id="game.gameTimeLabel">Game Time</i18next>
+  </label>
+  <input type="number" class="form-control" id="room_time" name="gameTime" placeholder="e.g. 11">
+ </div>
+ 
+<div class="mb-3">
+  <label for="publicRoom" class="form-label">
+    <i class="fas fa-users"></i>
+    <i18next i18next-id="game.publicRoomLabel">Public Room</i18next>
+ </label>
+  <input type="checkbox" class="form-check-input me-2" id="room_public" name="room_public">
+</div>
+
+  
+</div>
+
+
       </form>
       </div>
       <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+      <button type="button" class="close" data-bs-dismiss="modal">
         <i class="fas fa-times"></i> 
         <i18next i18next-id="modal.cancel">Cancel</i18next>
       </button>
-      <button id="form_button" class="btn btn-primary">
+      <button id="form_button" class="confirm">
         <i class="fas fa-check"></i> 
         <i18next i18next-id="modal.confirm">Confirm</i18next>
       </button>
