@@ -50,6 +50,7 @@ const translation = {
     ROOM_STATE_ERROR_FINISHED: "A partida ja terminou",
     PLAYER_EXISTS: "Já existe um jogador com esse nome na sala.",
     INVALID_COOKIES: "Dados de cookies inválidos recebidos.",
+    NO_PUBLIC_ROOMS_AVAILABLE: "Não há salas públicas disponíveis no momento.",
     ROOM_CODE_NOT_FOUND: "O código da sala não foi encontrado.",
   },
 };

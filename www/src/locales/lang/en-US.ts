@@ -50,6 +50,7 @@ const translation = {
     ROOM_STATE_ERROR_FINISHED: "The match is over",
     PLAYER_EXISTS: "A player with this name already exists in the room.",
     INVALID_COOKIES: "Invalid cookies data received.",
+    NO_PUBLIC_ROOMS_AVAILABLE: "There are no public rooms available at the moment.",
     ROOM_CODE_NOT_FOUND: "The room code was not found.",
   },
 };

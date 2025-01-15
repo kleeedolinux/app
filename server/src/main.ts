@@ -159,6 +159,52 @@ io.on("connection", (socket: Socket) => {
   });
 
   /**
+ * Handles joining a random public room.
+ * Filters for available public rooms with space for more players.
+ * If no public rooms are available, an error is emitted.
+ * If the player is already in a room, an error is emitted.
+ * Otherwise, the player is added to a random room and the room is updated.
+ * @param {string} room_player - The name/identifier of the player.
+ */
+  socket.on("join_random_room", ({ room_player }: { room_player: string }) => {
+  // Filters public rooms that are in "waiting" state and have less than 10 players
+  const availableRooms = Object.values(ROOMS).filter(
+    (room) => room.public && room.state === "waiting");
+
+  // If no available public rooms
+  if (availableRooms.length === 0) {
+    socket.emit("err_socket", { err_socket: "NO_PUBLIC_ROOMS_AVAILABLE" });
+    return;
+  }
+
+  // Randomly select a room from the available rooms
+  const randomRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
+  
+  // Check if the player is already in the selected room
+  if (randomRoom.players.find((player) => player.room_player === room_player)) {
+    socket.emit("err_socket", { err_socket: "PLAYER_EXISTS_IN_ROOM" });
+    return;
+  }
+
+  // Add the player to the selected room
+  socket.join(randomRoom.code);
+
+  randomRoom.players.push({
+    id: generateUuid(),
+    date: new Date(),
+    socket: socket.id,
+    player_data: { cookies: null },
+    room_player,
+  });
+
+  io.to(randomRoom.code).emit("update_room", { room_player, room: randomRoom });
+  
+  console.log(`Player "${room_player}" joined random room "${randomRoom.code}". Room state:`, randomRoom);
+  
+});
+
+
+  /**
    * Handles player rejoining a room.
    * @param data - The data for rejoining the room.
    */
@@ -273,6 +319,7 @@ io.on("connection", (socket: Socket) => {
   socket.on("disconnect", () => {
     console.log(`Client disconnected: ${socket.id}`);
   });
+  
 });
 
 // Starts the server on port 3000

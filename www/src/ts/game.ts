@@ -136,6 +136,20 @@ $("#form_button").on("click", () => {
       `<i class="fas fa-exclamation-circle"></i> ${lang("room.no_room_player")}`,
     );
   }
+  
+  if (option === "room_random") {
+ 
+    $room_modal.hide();
+    
+  localStorage.setItem("name", roomPlayer);
+  
+  socket.emit("join_random_room", {
+    room_player: roomPlayer,
+  });
+  
+  return;
+  
+  };
 
   // Verificação do tempo só se a opção for "create"
   if (option === "create") {
@@ -177,6 +191,7 @@ $("#form_button").on("click", () => {
     room_time: roomTime,
     room_player: roomPlayer,
   });
+  
 });
 
 // Handle socket errors
@@ -191,6 +206,8 @@ socket.on("err_socket", ({ err_socket }: { err_socket: string }) => {
     showMessage(lang("err_message.PLAYER_EXISTS"));
   } else if (err_socket === "INVALID_COOKIES") {
     showMessage(lang("err_message.INVALID_COOKIES"));
+  } else if (err_socket === "NO_PUBLIC_ROOMS_AVAILABLE") {
+    showMessage(lang("err_message.NO_PUBLIC_ROOMS_AVAILABLE"));
   } else if (err_socket === "ROOM_CODE_NOT_FOUND") {
     showMessage(lang("err_message.ROOM_CODE_NOT_FOUND"));
   }

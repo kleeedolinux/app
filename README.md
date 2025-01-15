@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Cookie Clicker</h1>
-  <img alt="icon" src="https://i.imgur.com/EOzKknx.png" width="40%" />
+  <img alt="icon" src="https://cookie-clicker-brasil.vercel.app/favicon.ico" width="40%" />
   <p>
     <b>🍪 Cookie Clicker Brasil</b> <i>is the best cookie clicking game you will find!</i>
   </p>

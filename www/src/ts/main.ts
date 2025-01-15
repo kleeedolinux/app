@@ -22,6 +22,7 @@ $(() => {
    */
   $('input[name="option_game"]').on("change", () => {
     // Clear the room code input field
+    const option = $('input[name="option_game"]:checked').val() as string;
     const $room_code_input = $("#room_code") as JQuery<HTMLInputElement>;
     const $code_container = $("#code_container");
     const $game_container = $("#game_container");
@@ -34,6 +35,9 @@ $(() => {
     // Toggle visibility of the room code and game containers based on the selection
     if ($room_join_input.is(":checked")) {
       $code_container.show();
+      $game_container.hide();
+    } else if (option === "room_random") {
+      $code_container.hide();
       $game_container.hide();
     } else {
       $code_container.hide();
