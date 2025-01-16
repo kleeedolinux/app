@@ -1,4 +1,4 @@
-import { Logger } from "./functions/logger";
+import { logger } from "./functions/logger";
 import express from "express";
 import { createServer } from "node:http";
 import { Server, type Socket } from "socket.io";
@@ -12,7 +12,6 @@ import type {
 } from "./types/rooms";
 import colors from "colors";
 import "dotenv/config"
-const logger = Logger("Server");
 
 /**
  * Initializes the Express application.
@@ -123,7 +122,7 @@ io.on("connection", (socket: Socket) => {
 
     io.to(room_code).emit("update_room", { room_player, room });
     
-    logger.info(`Player "${colors.bold.brightGreen.underline(room_player)}" joined room "${colors.bold.brightGreen.underline(room_code)}".`);
+    logger.info(`Player "${colors.bold.green.underline(room_player)}" joined room "${colors.bold.green.underline(room_code)}".`);
   });
 
   /**
@@ -197,7 +196,7 @@ io.on("connection", (socket: Socket) => {
 
     io.to(randomRoom.code).emit("update_room", { room_player, room: randomRoom });
     
-    logger.info(`Player "${colors.bold.brightGreen.underline(room_player)}" joined random room "${randomRoom.code}".`);
+    logger.info(`Player "${colors.bold.green.underline(room_player)}" joined random room "${randomRoom.code}".`);
   });
 
   /**
@@ -317,5 +316,5 @@ io.on("connection", (socket: Socket) => {
 
 
 HTTP.listen(process.env.PORT, () => {
-  logger.info(`Socket running: ` + colors.bold.brightGreen.underline(`http://0.0.0.0:${process.env.PORT}`));
+  logger.info(`Socket running: ` + colors.bold.green.underline(`http://0.0.0.0:${process.env.PORT}`));
 });
