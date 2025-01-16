@@ -1,3 +1,4 @@
+import { Logger } from "./functions/logger";
 import express from "express";
 import { createServer } from "node:http";
 import { Server, type Socket } from "socket.io";
@@ -9,6 +10,9 @@ import type {
   StartGameData,
   UpdateCookiesData,
 } from "./types/rooms";
+import colors from "colors";
+import "dotenv/config"
+const logger = Logger("Server");
 
 /**
  * Initializes the Express application.
@@ -18,12 +22,12 @@ const app = express();
 /**
  * Creates an HTTP server using the Express application.
  */
-const httpServer = createServer(app);
+const HTTP = createServer(app);
 
 /**
  * Initializes Socket.IO with the HTTP server.
  */
-const io = new Server(httpServer);
+const io = new Server(HTTP);
 
 /**
  * Stores active rooms on the server.
@@ -58,8 +62,7 @@ function generateCode(): string {
  */
 app.get("/ping", (req, res) => {
   res.status(200).send({ 
-    message: "pong",
-    date: new Date()
+    message: "pong!",
   });
 });
 
@@ -67,7 +70,6 @@ app.get("/ping", (req, res) => {
  * Handles client connections and sets up event listeners.
  */
 io.on("connection", (socket: Socket) => {
-  console.log(`Client connected: ${socket.id}`);
 
   /**
    * Handles player joining or creating a room.
@@ -120,10 +122,8 @@ io.on("connection", (socket: Socket) => {
     });
 
     io.to(room_code).emit("update_room", { room_player, room });
-    console.log(
-      `Player "${room_player}" joined room "${room_code}". Room state:`,
-      room,
-    );
+    
+    logger.info(`Player "${colors.bold.brightGreen.underline(room_player)}" joined room "${colors.bold.brightGreen.underline(room_code)}".`);
   });
 
   /**
@@ -144,64 +144,61 @@ io.on("connection", (socket: Socket) => {
 
     if (room.players.length === 0) {
       delete ROOMS[room_code];
-      console.log(`Room ${room_code} has been deleted.`);
+      logger.info(`Room ${room_code} has been deleted.`);
     } else if (room.owner === room_player) {
       room.owner = room.players[0]?.room_player || null;
-      console.log(`New owner of room ${room_code}: ${room.owner}`);
+      logger.info(`New owner of room ${room_code}: ${room.owner}`);
     }
 
     socket.leave(room_code);
     io.to(room_code).emit("update_room", { room_player, room });
 
-    console.log(
-      `Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`,
-    );
+    logger.info(`Player ${room_player} (Socket ID: ${socket.id}) left room ${room_code}`);
   });
 
   /**
- * Handles joining a random public room.
- * Filters for available public rooms with space for more players.
- * If no public rooms are available, an error is emitted.
- * If the player is already in a room, an error is emitted.
- * Otherwise, the player is added to a random room and the room is updated.
- * @param {string} room_player - The name/identifier of the player.
- */
+   * Handles joining a random public room.
+   * Filters for available public rooms with space for more players.
+   * If no public rooms are available, an error is emitted.
+   * If the player is already in a room, an error is emitted.
+   * Otherwise, the player is added to a random room and the room is updated.
+   * @param {string} room_player - The name/identifier of the player.
+   */
   socket.on("join_random_room", ({ room_player }: { room_player: string }) => {
-  // Filters public rooms that are in "waiting" state and have less than 10 players
-  const availableRooms = Object.values(ROOMS).filter(
-    (room) => room.public && room.state === "waiting");
+    // Filters public rooms that are in "waiting" state and have less than 10 players
+    const availableRooms = Object.values(ROOMS).filter(
+      (room) => room.public && room.state === "waiting");
 
-  // If no available public rooms
-  if (availableRooms.length === 0) {
-    socket.emit("err_socket", { err_socket: "NO_PUBLIC_ROOMS_AVAILABLE" });
-    return;
-  }
+    // If no available public rooms
+    if (availableRooms.length === 0) {
+      socket.emit("err_socket", { err_socket: "NO_PUBLIC_ROOMS_AVAILABLE" });
+      return;
+    }
 
-  // Randomly select a room from the available rooms
-  const randomRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
-  
-  // Check if the player is already in the selected room
-  if (randomRoom.players.find((player) => player.room_player === room_player)) {
-    socket.emit("err_socket", { err_socket: "PLAYER_EXISTS_IN_ROOM" });
-    return;
-  }
+    // Randomly select a room from the available rooms
+    const randomRoom = availableRooms[Math.floor(Math.random() * availableRooms.length)];
+    
+    // Check if the player is already in the selected room
+    if (randomRoom.players.find((player) => player.room_player === room_player)) {
+      socket.emit("err_socket", { err_socket: "PLAYER_EXISTS_IN_ROOM" });
+      return;
+    }
 
-  // Add the player to the selected room
-  socket.join(randomRoom.code);
+    // Add the player to the selected room
+    socket.join(randomRoom.code);
 
-  randomRoom.players.push({
-    id: generateUuid(),
-    date: new Date(),
-    socket: socket.id,
-    player_data: { cookies: null },
-    room_player,
+    randomRoom.players.push({
+      id: generateUuid(),
+      date: new Date(),
+      socket: socket.id,
+      player_data: { cookies: null },
+      room_player,
+    });
+
+    io.to(randomRoom.code).emit("update_room", { room_player, room: randomRoom });
+    
+    logger.info(`Player "${colors.bold.brightGreen.underline(room_player)}" joined random room "${randomRoom.code}".`);
   });
-
-  io.to(randomRoom.code).emit("update_room", { room_player, room: randomRoom });
-  
-  console.log(`Player "${room_player}" joined random room "${randomRoom.code}". Room state:`, randomRoom);
-  
-});
 
   /**
    * Handles player rejoining a room.
@@ -219,7 +216,7 @@ io.on("connection", (socket: Socket) => {
       player.socket = socket.id;
       socket.join(room_code);
       io.to(room_code).emit("update_room", { room_player, room });
-      console.log(`Player "${room_player}" rejoined room "${room_code}".`);
+      logger.info(`Player "${room_player}" rejoined room "${room_code}".`);
     }
   });
 
@@ -265,13 +262,10 @@ io.on("connection", (socket: Socket) => {
 
             if (room.state === "finished") {
               delete ROOMS[room_code];
-              console.log(`Room ${room_code} has been deleted.`);
+              logger.info(`Room ${room_code} has been deleted.`);
             }
 
-            console.log(
-              `Game in room "${room_code}" finished! Ranking:`,
-              ranking,
-            );
+            logger.info(`Game in room "${room_code}" finished! Ranking: ${JSON.stringify(ranking)}`);
             return;
           }
 
@@ -305,8 +299,8 @@ io.on("connection", (socket: Socket) => {
 
       if (player) {
         player.player_data.cookies = cookies;
-        console.log(
-          `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`,
+        logger.info(
+          `Player "${room_player}" in room "${room_code}" updated cookies to ${cookies}.`
         );
       }
     },
@@ -316,12 +310,12 @@ io.on("connection", (socket: Socket) => {
    * Handles client disconnection.
    */
   socket.on("disconnect", () => {
-    console.log(`Client disconnected: ${socket.id}`);
+    logger.info(`Client disconnected: ${socket.id}`);
   });
   
 });
 
-// Starts the server on port 3000
-httpServer.listen(3000, () => {
-  console.log("Server is running on http://localhost:3000");
+
+HTTP.listen(process.env.PORT, () => {
+  logger.info(`Socket running: ` + colors.bold.brightGreen.underline(`http://0.0.0.0:${process.env.PORT}`));
 });
