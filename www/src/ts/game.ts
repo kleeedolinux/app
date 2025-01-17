@@ -194,7 +194,7 @@ $("#form_button").on("click", () => {
   
 });
 
-// Handle socket errors
+/*
 socket.on("err_socket", ({ err_socket }: { err_socket: string }) => {
   if (err_socket === "ROOM_NOT_FOUND") {
     showMessage(lang("err_message.ROOM_NOT_FOUND"));
@@ -211,6 +211,11 @@ socket.on("err_socket", ({ err_socket }: { err_socket: string }) => {
   } else if (err_socket === "ROOM_CODE_NOT_FOUND") {
     showMessage(lang("err_message.ROOM_CODE_NOT_FOUND"));
   }
+});
+*/
+
+socket.on("err_socket", ({ err_socket }: { err_socket: string }) => {
+  return showMessage(lang("err_message." + err_socket));
 });
 
 // Handle room updates
